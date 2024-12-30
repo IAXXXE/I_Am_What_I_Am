@@ -5,21 +5,19 @@ using UnityEngine;
 using Tool;
 using Tool.Util;
 using Tool.Module.Message;
-using UnityEngine.AddressableAssets;
-using UnityEngine.SceneManagement;
+// using UnityEngine.AddressableAssets;
+// using UnityEngine.SceneManagement;
 
 public class GameInstance : Singleton<GameInstance>
 {
-    public Player player;
-    public Cursor cursor;
-    public AudioManager audioManager;
+    // public Player player;
+    // public Cursor cursor;
+    // public AudioManager audioManager;
 
-    public Transform itemParent;
+    // public Transform itemParent;
 
-    [SerializeField]
-    public List<AssetReference> levelList;
-
-    public int currLevelIdx = 1;
+    // [SerializeField]
+    // public List<AssetReference> levelList;
 
     private new void Awake()
     {
