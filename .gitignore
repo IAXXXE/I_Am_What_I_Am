@@ -1,6 +1,7 @@
-/Library
+/I_Am_What_I_Am/Library
+/I_Am_What_I_Am/Temp
 *.csproj
-/Logs
+/I_Am_What_I_Am/Logs
 *.sln
 .vscode
 Debug
