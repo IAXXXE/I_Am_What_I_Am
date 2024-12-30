@@ -60,7 +60,7 @@ public class CombatManager : MonoBehaviour
 
     public void UpdateBar()
     {
-        float splitRatio = (float)(playerScore / (playerScore + enemyScore));
+        float splitRatio = ((float)enemyScore) / (playerScore + enemyScore);
         Debug.Log("split : " + splitRatio);
         barMaterial.SetFloat("_SplitRatio", splitRatio);
     }
