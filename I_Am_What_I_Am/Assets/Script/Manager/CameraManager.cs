@@ -7,6 +7,12 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
+    Vector3 initPos;
+    void Awake()
+    {
+        initPos = transform.position;
+    }
+
     void Start()
     {
         GameInstance.Connect("camera.shake", OnCameraShake);
@@ -19,6 +25,8 @@ public class CameraManager : MonoBehaviour
 
     private void OnCameraShake(IMessage msg)
     {
-        transform.DOShakePosition(0.3f, 1f);
+        transform.DOShakePosition(0.1f, 1f);
+        GameInstance.CallLater(0.1f, ()=> transform.position = initPos);
+        
     }
 }

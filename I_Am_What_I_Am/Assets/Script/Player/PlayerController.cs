@@ -1,16 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Tool.Module.Message;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum ActionType
 {
     Normal,
+    PreAttack,
     Attack,
     Avoid,
     BeHit,
+    Lose
 }
 
 public enum PlayerStat
@@ -24,6 +26,8 @@ public enum PlayerStat
 public class PlayerController : MonoBehaviour
 {
     public List<GameObject> statList = new();
+
+    public bool isBack = false;
 
     public PlayerStat currStat = PlayerStat.Normal;
 
@@ -49,10 +53,11 @@ public class PlayerController : MonoBehaviour
         if(currStat != PlayerStat.Normal) return;
 
         var actionType = (ActionType)msg.Data;
-        Debug.Log(actionType);
         if(actionType == ActionType.Attack)
         {
+            if(CombatManager.Instance.currTurn != CombatTurn.Player && isBack != true) return;
             GameInstance.Signal("player.attack");
+            GameInstance.CallLater(0.3f, () => UpdateImage(ActionType.Normal));
         }
         else if(actionType == ActionType.Avoid)
         {
@@ -60,21 +65,26 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateImage(actionType);
-        GameInstance.CallLater(0.3f, () => UpdateImage(ActionType.Normal));
-
     }
 
     private void OnEnemyAttack(IMessage msg)
     {
-        if(currStat == PlayerStat.Avoid) return;
-
+        if(currStat == PlayerStat.Avoid) 
+        {
+            GameInstance.Instance.audioManager.PlayAudio("def");
+            currStat = PlayerStat.Normal;
+            isBack = true;
+            GameInstance.CallLater(2f, () => isBack = false);
+            return;
+        }
         BeHit();
     }
 
     private void Avoid()
     {
         currStat = PlayerStat.Avoid;
-        GameInstance.CallLater(0.3f, () => currStat = PlayerStat.Normal);
+        GameInstance.CallLater(0.5f, () => currStat = PlayerStat.Normal);
+        GameInstance.CallLater(0.5f, () => UpdateImage(ActionType.Normal));
     }
 
     private void BeHit()
@@ -83,11 +93,26 @@ public class PlayerController : MonoBehaviour
         GameInstance.Signal("camera.shake");
         UpdateImage(ActionType.BeHit);
         currStat = PlayerStat.BeHit;
+        GameInstance.Instance.audioManager.PlayAudio("hit");
+
+        if(CombatManager.Instance.enemyScore >= 10)
+        {
+            Lose();
+            return;
+        }
 
         GameInstance.CallLater(0.3f, () => {
             UpdateImage(ActionType.Normal);
             currStat = PlayerStat.Normal;
         });
+    }
+
+    private void Lose()
+    {
+        // StopAllCoroutines();
+        UpdateImage(ActionType.Lose);
+
+        transform.DOLocalMoveY(-7f, 1f);
     }
 
     private void UpdateImage(ActionType actionType)

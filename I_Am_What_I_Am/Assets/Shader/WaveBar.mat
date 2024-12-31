@@ -71,7 +71,7 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SplitRatio: 0.46153846
+    - _SplitRatio: 0.6666667
     - _SrcBlend: 1
     - _UVSec: 0
     - _WaveAmplitude: 0.002

@@ -8,16 +8,21 @@ using Tool.Module.Message;
 // using UnityEngine.AddressableAssets;
 // using UnityEngine.SceneManagement;
 
+public enum Mode
+{
+    Easy,
+    Normal,
+    Hard,
+}
+
 public class GameInstance : Singleton<GameInstance>
 {
     // public Player player;
     // public Cursor cursor;
-    // public AudioManager audioManager;
+    public Mode mode;
+    public bool inCombat;
 
-    // public Transform itemParent;
-
-    // [SerializeField]
-    // public List<AssetReference> levelList;
+    public AudioManager audioManager;
 
     private new void Awake()
     {
@@ -25,6 +30,42 @@ public class GameInstance : Singleton<GameInstance>
         MessageDispatcher.Init(gameObject);
 
         Application.targetFrameRate = 30;
+        mode = Mode.Normal;
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Easy mode");
+            mode = Mode.Easy;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Normal mode");
+            mode = Mode.Normal;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("Hard mode");
+            mode = Mode.Hard;
+        }
+    }
+
+    public void ChangeMode(int diff)
+    {
+        if(diff > 0)
+        {
+            if(mode == Mode.Easy) mode = Mode.Normal;
+            if(mode == Mode.Normal) mode = Mode.Hard;
+        }
+        else if(diff < 0)
+        {
+            if(mode == Mode.Normal) mode = Mode.Easy;
+            if(mode == Mode.Hard) mode = Mode.Normal;
+        }
     }
 
     #region Coroutine

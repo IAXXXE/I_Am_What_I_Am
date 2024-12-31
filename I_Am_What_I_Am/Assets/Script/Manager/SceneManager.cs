@@ -33,6 +33,16 @@ public class SceneManager : MonoBehaviour
         GameInstance.CallLater(1.5f, () => GameInstance.Signal("fade.in"));
     }
 
+    public void ReturnTitle()
+    {
+        GameInstance.Signal("fade.out");
+        GameInstance.CallLater(1f, () => {
+            title.gameObject.SetActive(true);
+            arena.gameObject.SetActive(false);
+        });
+        GameInstance.CallLater(1.5f, () => GameInstance.Signal("fade.in"));
+    }
+
 
     private void OnSceneLoad(IMessage msg)
     {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Tool.Module.Message;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -48,11 +49,17 @@ public class Cursor : MonoBehaviour
 
     void Update()
     {
+        if(!GameInstance.Instance.inCombat) 
+        {
+            trail.gameObject.SetActive(false);
+            return;
+        }
         // transform
         if(Input.GetMouseButtonDown(0))
         {
             downPos = Input.mousePosition;
             trail.gameObject.SetActive(true);
+            if(CombatManager.Instance.currTurn == CombatTurn.Player) DoAction(ActionType.PreAttack);
         }
 
         if(Input.GetMouseButtonUp(0))
